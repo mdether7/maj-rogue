@@ -12,6 +12,15 @@
 #define MIN_ROOM_COUNT 3
 #define MAX_ROOM_COUNT 7
 
+/* XXX Enums */
+enum tile_type {
+  FLOOR = 0, WALL
+};
+
+enum room_type {
+  ROOM_START = 0, ROOM_CAVE, ROOM_CROSS, ROOM_RECT, ROOM_SQUARE, ROOM_TOTAL
+};
+
 /* XXX Structs */
 /* struct Player */
 struct player {
@@ -22,15 +31,7 @@ struct player {
 };
 
 struct room {
-  char layout[DUN_ROOM_SIZE][DUN_ROOM_SIZE];
-};
-
-enum tile_types {
-  FLOOR = 0, WALL
-};
-
-enum room_types {
-  ROOM_START = 0, ROOM_CAVE, ROOM_CROSS, ROOM_RECT, ROOM_SQUARE, ROOM_TOTAL
+  enum tile_type layout[DUN_ROOM_SIZE][DUN_ROOM_SIZE];
 };
 
 /* XXX player.c */
@@ -40,7 +41,9 @@ extern void player_init(void);
 extern struct room room_templates[ROOM_TOTAL];
 
 /* XXX dungen.c */
-extern enum tile_types maptiles[DUN_SIZE][DUN_SIZE]; 
+extern enum tile_type maptiles[DUN_SIZE][DUN_SIZE]; 
+extern int generate_dungeon(void);
+extern void draw_dungeon(void);
 
 /* XXX dice.c */
 extern int dice(int sides); /* dice range 1 to SIDES */

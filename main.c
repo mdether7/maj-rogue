@@ -19,6 +19,9 @@ int main(void)
 {
   rnum_init();
 
+	generate_dungeon();
+	draw_dungeon();
+
   
 
 

@@ -4,7 +4,7 @@ CC= cc
 OPT= -O0
 CFLAGS= -c -g -Wall -Wstrict-prototypes -Wwrite-strings -Wmissing-prototypes -Werror
 LINKFLAGS= -g -lncurses -lpanel
-OBJS= dice.o main.o player.o dungen.o
+OBJS= dice.o main.o player.o dungen.o rooms.o
 
 all: $(GAME)
 
@@ -19,6 +19,8 @@ main.o: main.c majrogue.h
 dice.o: dice.c majrogue.h
 
 dungen.o: dungen.c majrogue.h
+
+rooms.o: rooms.c majrogue.h
 
 player.o: player.c majrogue.h
 
