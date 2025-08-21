@@ -7,7 +7,10 @@
 /* XXX Defines */
 #define DUN_SIZE 32 /* Whole dungeon is 32 x 32 = 1024 tiles */
 #define DUN_ROOM_SIZE 8 /* Each "room cell" is 8 X 8 = 16 room tiles */
-#define DUN_CELL_NUMBER ((DUN_SIZE / DUN_ROOM_SIZE) * (DUN_SIZE / DUN_ROOM_SIZE))
+#define DUN_TOTAL_CELLS ((DUN_SIZE / DUN_ROOM_SIZE) * (DUN_SIZE / DUN_ROOM_SIZE))
+
+#define MIN_ROOM_COUNT 3
+#define MAX_ROOM_COUNT 7
 
 /* XXX Structs */
 /* struct Player */
