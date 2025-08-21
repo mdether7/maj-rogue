@@ -9,8 +9,8 @@
 #define DUN_ROOM_SIZE 8 /* Each "room cell" is 8 X 8 = 16 room tiles */
 #define DUN_TOTAL_CELLS ((DUN_SIZE / DUN_ROOM_SIZE) * (DUN_SIZE / DUN_ROOM_SIZE))
 
-#define MIN_ROOM_COUNT 3
-#define MAX_ROOM_COUNT 7
+#define MIN_ROOM_COUNT 4
+#define MAX_ROOM_COUNT 8
 
 /* XXX Enums */
 enum tile_type {
@@ -37,19 +37,40 @@ struct room {
 /* XXX player.c */
 extern void player_init(void);
 
+/* XXX map.c */
+extern enum tile_type maptiles[DUN_SIZE][DUN_SIZE];
+extern int map_init(void);
+
+/* XXX display.c */
+extern void display_draw_dungeon(void);
+
+/**
+ * 
+ * 
+ * 
+ * 
+ * 
+ */
+
 /* XXX rooms.c */
 extern struct room room_templates[ROOM_TOTAL];
 
 /* XXX dungen.c */
-extern enum tile_type maptiles[DUN_SIZE][DUN_SIZE]; 
-extern int generate_dungeon(void);
-extern void draw_dungeon(void);
+extern int dungeon_generate(void);
+
+/**
+ * 
+ * 
+ * 
+ * 
+ * 
+ */
 
 /* XXX dice.c */
 extern int dice(int sides); /* dice range 1 to SIDES */
-extern int zero_dice(int sides); /* dice range 0 to SIDES-1 */
+extern int dice_zero(int sides); /* dice range 0 to SIDES-1 */
 extern int dice_multiple(int count, int sides);
+extern int dice_zero_multiple(int count, int sides); /* [[MAYBE_UNUSED]] */ 
 extern int rand_range(int min, int max);
-extern int zero_dice_multiple(int count, int sides); /* [[MAYBE_UNUSED]] */ 
 
 #endif /* MAJROGUE_H */

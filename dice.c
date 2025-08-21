@@ -13,11 +13,11 @@ int dice_multiple(int count, int sides)
   return total;
 }
 
-int zero_dice_multiple(int count, int sides)
+int dice_zero_multiple(int count, int sides)
 {
   int total = 0;
   for ( ; count > 0; count--) {
-    total += zero_dice(sides);
+    total += dice_zero(sides);
   }
   return total;
 }
@@ -33,7 +33,7 @@ int dice(int sides)
   return rval % sides + 1;
 }
 
-int zero_dice(int sides)
+int dice_zero(int sides)
 {
   int rval;
   int limit;
@@ -46,5 +46,5 @@ int zero_dice(int sides)
 
 int rand_range(int min, int max)
 {
-  return min + zero_dice(max - min + 1);
+  return min + dice_zero(max - min + 1);
 }

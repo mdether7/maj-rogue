@@ -9,8 +9,6 @@
 
 #define UNUSED_ROOM_CELL 99 /* sentinel value to keep the qsort order right */
 
-enum tile_type maptiles[DUN_SIZE][DUN_SIZE]; /* stores tiles data of dungeon */
-
 typedef struct { /* should be internal to dungen.c */
   int x, y;
   int cx, cy;
@@ -21,28 +19,15 @@ typedef struct { /* should be internal to dungen.c */
 static room_cell room_cells[DUN_TOTAL_CELLS]; /* array internal to dungen */
 
 static void reset_room_cells(void);
-static void fill_map(enum tile_type type);
-//static void connect_rooms(room_cell* room_first, room_cell* room_second);
+static void fill_map_tiles(enum tile_type type);
+static void connect_rooms(room_cell* room_first, room_cell* room_second);
 static void get_random_room_center(int room_x, int room_y,
                                    int* target_x, int* target_y);
 static int comp_qsort(const void* x, const void* y);
 
-void draw_dungeon(void)
+int dungeon_generate(void)
 {
-  for (int i = 0; i < DUN_SIZE; i++)
-  {
-    for (int j = 0; j < DUN_SIZE; j++)
-    {
-      printf("%d ", maptiles[i][j]);
-    }
-    putchar('\n');
-  }
-  putchar('\n');
-}
-
-int generate_dungeon(void)
-{
-  fill_map(WALL);
+  fill_map_tiles(WALL);
   reset_room_cells();
 
   /* randomize the number of rooms that will be created */
@@ -50,7 +35,7 @@ int generate_dungeon(void)
   int rooms_to_create = total_rooms; /* i need to cache the original count */
 
   /* Choose random room cell for starting room  */
-  int random_cell = zero_dice(DUN_TOTAL_CELLS);
+  int random_cell = dice_zero(DUN_TOTAL_CELLS);
 
   room_cells[random_cell].used = true; /* first room will always "fit" */
   room_cells[random_cell].order = 1; /* track order of creation for later iteration  */
@@ -70,7 +55,7 @@ int generate_dungeon(void)
 
   while (rooms_to_create) {
 
-    random_cell = zero_dice(DUN_TOTAL_CELLS);
+    random_cell = dice_zero(DUN_TOTAL_CELLS);
 
     if (room_cells[random_cell].used) {
       continue;
@@ -90,7 +75,7 @@ int generate_dungeon(void)
     }
 
     rooms_to_create--;
-    room_cells[random_cell].order = room_index++;
+    room_cells[random_cell].order = room_index++; /* keep indexing */
   }
 
   /**
@@ -115,25 +100,45 @@ int generate_dungeon(void)
    * now connect all the rooms with each other 
    * in order of creation so that all rooms get connected. 
    */
-  // for (int room = 0; room < total_rooms - 1; room++)
-  // {
-  //   connect_rooms(&room_cells[room], &room_cells[room+1]);
-  // }
+  for (int room = 0; room < total_rooms - 1; room++)
+  {
+    connect_rooms(&room_cells[room], &room_cells[room+1]);
+  }
   
-  return 1;
+  return 0;
 }
 
-// static void connect_rooms(room_cell* room_first, room_cell* room_second)
-// {
-//   int x_dist = abs(room_first->cx - room_second->cx);
-//   int y_dist = abs(room_first->cy - room_second->cy);
+static void connect_rooms(room_cell* room_first, room_cell* room_second)
+{
+  int x_dist = abs(room_first->cx - room_second->cx);
+  int y_dist = abs(room_first->cy - room_second->cy);
 
+  for (int tile = 0; tile <= x_dist; tile++)
+  {
+    if ( room_first->cx < room_second->cx )
+    {
+      maptiles[room_first->cx+tile][room_first->cy] = FLOOR;
+    }
+    else
+    {
+      maptiles[room_first->cx-tile][room_first->cy] = FLOOR;
+    }
+  }
 
+  for (int tile = 0; tile <= y_dist; tile++)
+  {
+    if ( room_first->cy < room_second->cy )
+    {
+      maptiles[room_second->cx][room_second->cy-tile] = FLOOR;
+    }
+    else
+    {
+      maptiles[room_second->cx][room_second->cy+tile] = FLOOR;
+    }
+  }
+}
 
-
-// }
-
-static void fill_map(enum tile_type type)
+static void fill_map_tiles(enum tile_type type)
 {
   for (int x = 0; x < DUN_SIZE; x++)
   {
@@ -147,7 +152,7 @@ static void fill_map(enum tile_type type)
 static void get_random_room_center(int room_x, int room_y,
                                    int* target_x, int* target_y)
 {
-  int r = zero_dice(4);
+  int r = dice_zero(4);
   int count = 0;
   for (int i = 3; i < 5; i++)
   {
