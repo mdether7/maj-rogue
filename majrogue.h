@@ -14,7 +14,7 @@
 
 /* XXX Enums */
 enum tile_type {
-  FLOOR = 0, WALL
+  FLOOR = 0, WALL, DOOR
 };
 
 enum room_type {

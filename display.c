@@ -10,7 +10,14 @@ void display_draw_dungeon(void)
   {
     for (int j = 0; j < DUN_SIZE; j++)
     {
-      putchar(maptiles[i][j] == WALL ? '#' : '.');
+      enum tile_type tile = maptiles[i][j];
+      switch (tile)
+      {
+        case FLOOR: putchar('.'); break;
+        case WALL: putchar('#'); break;
+        case DOOR: putchar('X'); break;
+        default: putchar('?'); break;
+      }
     }
     putchar('\n');
   }
