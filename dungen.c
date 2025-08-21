@@ -3,16 +3,15 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdio.h>
+#include <limits.h>
 
 #include "majrogue.h"
-
-#define UNUSED_ROOM_CELL 99 /* sentinel value to keep the qsort order right */
 
 typedef struct { /* should be internal to dungen.c */
   int x, y;
   int cx, cy;
   int order;
+  // enum room_type type; NOTE(mdether7): That's great idea!
   bool used;
 } room_cell;
 
@@ -21,6 +20,7 @@ static room_cell room_cells[DUN_TOTAL_CELLS]; /* array internal to dungen */
 static void reset_room_cells(void);
 static void fill_map_tiles(enum tile_type type);
 static void connect_rooms(room_cell* room_first, room_cell* room_second);
+static void place_doors(room_cell* room);
 static void get_random_room_center(int room_x, int room_y,
                                    int* target_x, int* target_y);
 static int comp_qsort(const void* x, const void* y);
@@ -104,12 +104,15 @@ int dungeon_generate(void)
   {
     connect_rooms(&room_cells[room], &room_cells[room+1]);
   }
+
+  place_doors(&room_cells[0]); /* TEMP */
   
   return 0;
 }
 
 static void connect_rooms(room_cell* room_first, room_cell* room_second)
 {
+  /* TODO(mdether7): Randomize L corridor placement */
   int x_dist = abs(room_first->cx - room_second->cx);
   int y_dist = abs(room_first->cy - room_second->cy);
 
@@ -136,6 +139,12 @@ static void connect_rooms(room_cell* room_first, room_cell* room_second)
       maptiles[room_second->cx][room_second->cy+tile] = FLOOR;
     }
   }
+}
+
+static void place_doors(room_cell* room)
+{
+  (void)room;
+
 }
 
 static void fill_map_tiles(enum tile_type type)
@@ -175,7 +184,7 @@ static void reset_room_cells(void)
   {
     for (int j = 0; j < DUN_SIZE; j+=DUN_ROOM_SIZE)
     {
-      room_cells[count++] = (room_cell){i, j, 0, 0, UNUSED_ROOM_CELL, false};
+      room_cells[count++] = (room_cell){i, j, 0, 0, INT_MAX, false};
     }
   }
 }

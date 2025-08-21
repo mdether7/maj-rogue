@@ -5,6 +5,12 @@
 
 .vscode/ 
 
+# Object files
+*.o
+
+# Executable (replace 'majrogue' with your executable name)
+majrogue
+
 # User-specific files
 *.rsuser
 *.suo
