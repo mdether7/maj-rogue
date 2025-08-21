@@ -1,7 +1,8 @@
 /* dice.c */
 
-#include"majrogue.h"
 #include<stdlib.h>
+
+#include"majrogue.h"
 
 int dice_multiple(int count, int sides)
 {

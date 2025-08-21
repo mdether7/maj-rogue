@@ -1,5 +1,4 @@
 /* majrogue.h */
-
 #ifndef MAJROGUE_H
 #define MAJROGUE_H
 
@@ -8,14 +7,12 @@
 /* XXX Defines */
 #define DUN_SIZE 32 /* Whole dungeon is 32 x 32 = 1024 tiles */
 #define DUN_ROOM_SIZE 8 /* Each "room cell" is 8 X 8 = 16 room tiles */
-
-/* XXX typedefs */
-typedef int8_t MAP_INT; /* just to keep the array sizes smaller */
+#define DUN_CELL_NUMBER ((DUN_SIZE / DUN_ROOM_SIZE) * (DUN_SIZE / DUN_ROOM_SIZE))
 
 /* XXX Structs */
 /* struct Player */
 struct player {
-  char name[17]; /* Max name lenght 10, here space included for '/0' */
+  char name[17]; /* Max name lenght 16, here space included for '/0' */
   int y; /* y-coord */
   int x; /* x-coord */
   int gold;
@@ -34,10 +31,13 @@ enum room_types {
 };
 
 /* XXX player.c */
-void player_init(void);
+extern void player_init(void);
+
+/* XXX rooms.c */
+extern struct room room_templates[ROOM_TOTAL];
 
 /* XXX dungen.c */
-extern MAP_INT maptiles[DUN_SIZE][DUN_SIZE]; 
+extern enum tile_types maptiles[DUN_SIZE][DUN_SIZE]; 
 
 /* XXX dice.c */
 extern int dice(int sides); /* dice range 1 to SIDES */

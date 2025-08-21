@@ -1,9 +1,9 @@
-#include "majrogue.h"
-
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/stat.h>
 #include <time.h>
+
+#include "majrogue.h"
 
 char running_state[256];
 static void rnum_init(void)
