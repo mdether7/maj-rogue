@@ -243,10 +243,11 @@ static void place_doors(const room_cell* room)
    */
 
   for (int nwse = 0; nwse < DUN_ROOM_SIZE; nwse++)
-  {                               /* && (START_ROOM || PERCENT_CHANCE)*/    
+  {                               /* && (START_ROOM || PERCENT_CHANCE) ??? Maybe */    
     if (!maptiles[room->x][room->y+nwse]) { /* north*/
-      room_cell* n_room = get_neighbouring_room_cell(room, NORTH); /* HAS DORSS?? */
-      maptiles[room->x][room->y+nwse] = DOOR; 
+      room_cell* n_room = get_neighbouring_room_cell(room, NORTH);
+      (void)n_room; /* TODO(mdether7): make so that doors are not spawned directly */
+      maptiles[room->x][room->y+nwse] = DOOR; /* besides each other. */
     }
     if (!maptiles[room->x+DUN_ROOM_SIZE - 1][room->y+nwse]) { /* south */
       maptiles[room->x+DUN_ROOM_SIZE - 1][room->y+nwse] = DOOR;
