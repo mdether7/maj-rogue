@@ -18,7 +18,10 @@ static void rnum_init(void)
 int main(void)
 {
   rnum_init();
-	dungeon_generate();
-	display_draw_dungeon();
+	for (int i = 0; i < 100000; i++)
+	{
+		dungeon_generate();
+		display_draw_dungeon();
+	}
   return 0;
 }

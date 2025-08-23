@@ -17,15 +17,29 @@ typedef struct { /* should be internal to dungen.c */
   bool used;
 } room_cell;
 
+enum direction { /* i dont know if this will stay */
+  NORTH = 0, SOUTH, EAST, WEST
+};
+
 static room_cell room_cells[DUN_TOTAL_CELLS]; /* array internal to dungen */
 
 static void reset_room_cells(void);
 static void fill_map_tiles(enum tile_type type);
-static void connect_rooms(room_cell* room_first, room_cell* room_second);
-static void place_doors(room_cell* room);
+static inline void draw_line(int start, int end, int fixed, bool axis_x);
+static void connect_rooms(const room_cell* room_first, const room_cell* room_second);
+static void place_doors(const room_cell* room);
 static void get_random_room_center(int room_x, int room_y,
                                    int* target_x, int* target_y);
 static int comp_qsort(const void* x, const void* y);
+
+/* new aditions here, tests mainly! */
+
+/**
+ * Return room cell neighboring to the given room and specified direction
+ * if room_cell not occupied return NULL.
+ */
+static room_cell* get_neighbouring_room_cell(const room_cell* room,
+                                             enum direction dir);
 
 int dungeon_generate(void)
 {
@@ -132,7 +146,7 @@ static inline void draw_line(int start, int end, int fixed, bool axis_x)
   }
 }
 
-static void connect_rooms(room_cell* room_first, room_cell* room_second)
+static void connect_rooms(const room_cell* room_first, const room_cell* room_second)
 {
   int horizontal_first = dice(1);
 
@@ -148,7 +162,7 @@ static void connect_rooms(room_cell* room_first, room_cell* room_second)
 /* ENDIF STUDY */
 
 
-static void place_doors(room_cell* room)
+static void place_doors(const room_cell* room)
 {
   /**
    * Iterate over each room side [N,W,S,E] and place 
