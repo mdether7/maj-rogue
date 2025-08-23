@@ -2,9 +2,14 @@
 GAME= majrogue
 CC= cc
 OPT= -O0
-CFLAGS= -c -g -Wall -Wstrict-prototypes -Wwrite-strings -Wmissing-prototypes -Werror
+CFLAGS= -c -Wall -Wstrict-prototypes -Wwrite-strings -Wmissing-prototypes -Werror
 LINKFLAGS= -g -lncurses -lpanel
 OBJS= dice.o main.o display.o map.o player.o dungen.o rooms.o
+
+# usage: make or make DEBUG=1
+ifdef DEBUG
+	CFLAGS += -DDEBUG -g 
+endif 
 
 all: $(GAME)
 

@@ -10,6 +10,9 @@ static void rnum_init(void)
 {
 	time_t t = time(NULL);
 	t ^= (getuid() << 16) | (getpid() & 0xFFFF);
+#ifdef DEBUG
+	t = 1234;
+#endif
 	initstate(t, running_state, 256);
 }
 
@@ -18,7 +21,7 @@ static void rnum_init(void)
 int main(void)
 {
   rnum_init();
-	for (int i = 0; i < 100000; i++)
+	for (int i = 0; i < 1; i++)
 	{
 		dungeon_generate();
 		display_draw_dungeon();

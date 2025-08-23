@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <limits.h>
+#include <assert.h>
 
 #include <stdio.h>
 
@@ -18,7 +19,7 @@ typedef struct { /* should be internal to dungen.c */
 } room_cell;
 
 enum direction { /* i dont know if this will stay */
-  NORTH = 0, SOUTH, EAST, WEST
+  NORTH = 0, EAST, SOUTH, WEST
 };
 
 static room_cell room_cells[DUN_TOTAL_CELLS]; /* array internal to dungen */
@@ -36,10 +37,33 @@ static int comp_qsort(const void* x, const void* y);
 
 /**
  * Return room cell neighboring to the given room and specified direction
- * if room_cell not occupied return NULL.
+ * if room_cell not generated or non-existant (out of bounds) return NULL.
  */
-static room_cell* get_neighbouring_room_cell(const room_cell* room,
-                                             enum direction dir);
+// static room_cell* get_neighbouring_room_cell(const room_cell* room,
+//                                              enum direction dir);
+
+// static room_cell* get_neighbouring_room_cell(const room_cell* room, enum direction dir)
+// {
+//   assert(room && "Room is null!");
+
+//   int new_room_x;
+//   int new_room_y;
+
+//   switch (dir)
+//   {
+//     case NORTH:
+//       if (room->x == 0) { return NULL; } /* room out of bounds upper */
+//       new_room_x = room->x - DUN_ROOM_SIZE; /* move up with x axis */
+
+//       for (int i = 0; i < DUN_TOTAL_CELLS; i++) 
+//       {
+//         if (room_cells[i].x == new_room_x && room_cells[i].y == room->y) {
+//           return &room_cells[i];
+//         }
+//       }
+      
+//   }
+// }
 
 int dungeon_generate(void)
 {
