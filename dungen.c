@@ -18,7 +18,7 @@ typedef struct { /* should be internal to dungen.c */
   bool used;
 } room_cell;
 
-enum direction { /* i dont know if this will stay */
+enum direction {
   NORTH = 0, EAST, SOUTH, WEST
 };
 
@@ -39,19 +39,23 @@ static int comp_qsort(const void* x, const void* y);
  * Return room cell neighboring to the given room and specified direction
  * if room_cell non-existant (out of bounds) return NULL.
  */
-static inline room_cell* get_neighbour_cell_at(int x_pos, int y_pos);
+static inline room_cell* get_cell_at(int x_pos, int y_pos);
 static room_cell* get_neighbouring_room_cell(const room_cell* room,
                                              enum direction dir);
 
-static inline room_cell* get_neighbour_cell_at(int x_pos, int y_pos)
+static inline room_cell* get_cell_at(int x_pos, int y_pos)
 {
+  assert((x_pos >= 0 && x_pos <= DUN_SIZE - DUN_ROOM_SIZE));
+  assert((y_pos >= 0 && y_pos <= DUN_SIZE - DUN_ROOM_SIZE));
+  assert((x_pos % DUN_ROOM_SIZE == 0));
+  assert((y_pos % DUN_ROOM_SIZE == 0));
   for (int cell = 0; cell < DUN_TOTAL_CELLS; cell++)
   {
     if (room_cells[cell].x == x_pos && room_cells[cell].y == y_pos) {
       return &room_cells[cell];
     }
   }
-  assert(0 && "Room should always be found!");
+  assert(0 && "Room at valid grid position should always be found in room_cells array!");
   return NULL;
 }
 
@@ -103,7 +107,7 @@ static room_cell* get_neighbouring_room_cell(const room_cell* room, enum directi
     default:
       abort();  
   }
-  return get_neighbour_cell_at(neighbour_x, neighbour_y);
+  return get_cell_at(neighbour_x, neighbour_y);
 }
 
 int dungeon_generate(void)
@@ -193,6 +197,10 @@ int dungeon_generate(void)
   {
     place_doors(&room_cells[room]);
   }
+
+  // room_cell* room = get_cell_at(0, 0);
+  // room_cell* roomfinal = get_neighbouring_room_cell(room, NORTH);
+  // assert(roomfinal);
   
   return 0;
 }
@@ -237,6 +245,7 @@ static void place_doors(const room_cell* room)
   for (int nwse = 0; nwse < DUN_ROOM_SIZE; nwse++)
   {                               /* && (START_ROOM || PERCENT_CHANCE)*/    
     if (!maptiles[room->x][room->y+nwse]) { /* north*/
+      room_cell* n_room = get_neighbouring_room_cell(room, NORTH); /* HAS DORSS?? */
       maptiles[room->x][room->y+nwse] = DOOR; 
     }
     if (!maptiles[room->x+DUN_ROOM_SIZE - 1][room->y+nwse]) { /* south */
@@ -285,12 +294,14 @@ static void get_random_room_center(int room_x, int room_y,
 static void reset_room_cells(void)
 {
   int count = 0;
-  for (int i = 0; i < DUN_SIZE; i+=DUN_ROOM_SIZE)
+  for (int i = 0; i < DUN_SIZE; )
   {
-    for (int j = 0; j < DUN_SIZE; j+=DUN_ROOM_SIZE)
+    for (int j = 0; j < DUN_SIZE; )
     {
       room_cells[count++] = (room_cell){i, j, 0, 0, INT_MAX, 0, false};
+      j+= DUN_ROOM_SIZE;
     }
+    i+=DUN_ROOM_SIZE;
   }
 }
 
