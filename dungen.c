@@ -37,33 +37,74 @@ static int comp_qsort(const void* x, const void* y);
 
 /**
  * Return room cell neighboring to the given room and specified direction
- * if room_cell not generated or non-existant (out of bounds) return NULL.
+ * if room_cell non-existant (out of bounds) return NULL.
  */
-// static room_cell* get_neighbouring_room_cell(const room_cell* room,
-//                                              enum direction dir);
+static inline room_cell* get_neighbour_cell_at(int x_pos, int y_pos);
+static room_cell* get_neighbouring_room_cell(const room_cell* room,
+                                             enum direction dir);
 
-// static room_cell* get_neighbouring_room_cell(const room_cell* room, enum direction dir)
-// {
-//   assert(room && "Room is null!");
+static inline room_cell* get_neighbour_cell_at(int x_pos, int y_pos)
+{
+  for (int cell = 0; cell < DUN_TOTAL_CELLS; cell++)
+  {
+    if (room_cells[cell].x == x_pos && room_cells[cell].y == y_pos) {
+      return &room_cells[cell];
+    }
+  }
+  assert(0 && "Room should always be found!");
+  return NULL;
+}
 
-//   int new_room_x;
-//   int new_room_y;
+static room_cell* get_neighbouring_room_cell(const room_cell* room, enum direction dir)
+{
+  assert(room && "Room is null!");
 
-//   switch (dir)
-//   {
-//     case NORTH:
-//       if (room->x == 0) { return NULL; } /* room out of bounds upper */
-//       new_room_x = room->x - DUN_ROOM_SIZE; /* move up with x axis */
+  int neighbour_x;
+  int neighbour_y;
 
-//       for (int i = 0; i < DUN_TOTAL_CELLS; i++) 
-//       {
-//         if (room_cells[i].x == new_room_x && room_cells[i].y == room->y) {
-//           return &room_cells[i];
-//         }
-//       }
-      
-//   }
-// }
+  switch (dir)
+  {
+    case NORTH: /* /\ */
+      if ((room->x - DUN_ROOM_SIZE) < 0) {
+        return NULL;
+      }
+
+      neighbour_x = room->x - DUN_ROOM_SIZE;
+      neighbour_y = room->y;
+      break;
+
+    case EAST: /* -> */
+      if ((room->y + DUN_ROOM_SIZE) > DUN_SIZE) {
+        return NULL;
+      }
+
+      neighbour_x = room->x;
+      neighbour_y = room->y + DUN_ROOM_SIZE;
+      break;
+
+    case SOUTH: /* \/ */
+      if ((room->x + DUN_ROOM_SIZE) > DUN_SIZE) {
+        return NULL;
+      }
+
+      neighbour_x = room->x + DUN_ROOM_SIZE;
+      neighbour_y = room->y;
+      break;
+
+    case WEST: /* <- */
+      if ((room->y - DUN_ROOM_SIZE) < 0) {
+        return NULL;
+      }
+
+      neighbour_x = room->x;
+      neighbour_y = room->y - DUN_ROOM_SIZE;
+      break;
+
+    default:
+      abort();  
+  }
+  return get_neighbour_cell_at(neighbour_x, neighbour_y);
+}
 
 int dungeon_generate(void)
 {
