@@ -155,31 +155,19 @@ static void place_doors(room_cell* room)
    * doors based on certain conditions
    */
 
-  for (int north = 0; north < DUN_ROOM_SIZE; north++)
-  {
-    if (!maptiles[room->x][room->y+north]) {
-      maptiles[room->x][room->y+north] = DOOR; 
+  for (int nwse = 0; nwse < DUN_ROOM_SIZE; nwse++)
+  {                               /* && (START_ROOM || PERCENT_CHANCE)*/    
+    if (!maptiles[room->x][room->y+nwse]) { /* north*/
+      maptiles[room->x][room->y+nwse] = DOOR; 
     }
-  }
-
-  for (int south = 0; south < DUN_ROOM_SIZE; south++)
-  {
-    if (!maptiles[room->x+DUN_ROOM_SIZE - 1][room->y+south]) {
-      maptiles[room->x+DUN_ROOM_SIZE - 1][room->y+south] = DOOR;
+    if (!maptiles[room->x+DUN_ROOM_SIZE - 1][room->y+nwse]) { /* south */
+      maptiles[room->x+DUN_ROOM_SIZE - 1][room->y+nwse] = DOOR;
     }
-  }
-
-  for (int west = 0; west < DUN_ROOM_SIZE; west++)
-  {
-    if (!maptiles[room->x+west][room->y]) {
-      maptiles[room->x+west][room->y] = DOOR;
+    if (!maptiles[room->x+nwse][room->y]) { /* west */
+      maptiles[room->x+nwse][room->y] = DOOR;
     }
-  }
-
-  for (int east = 0; east < DUN_ROOM_SIZE; east++)
-  {              
-    if (!maptiles[room->x+east][room->y+DUN_ROOM_SIZE - 1]) {
-       maptiles[room->x+east][room->y+DUN_ROOM_SIZE - 1] = DOOR; 
+    if (!maptiles[room->x+nwse][room->y+DUN_ROOM_SIZE - 1]) {
+      maptiles[room->x+nwse][room->y+DUN_ROOM_SIZE - 1] = DOOR; /* east */
     }
   }
 
