@@ -202,10 +202,6 @@ int dungeon_generate(void)
   {
     place_doors(&room_cells[room]);
   }
-
-  // room_cell* room = get_cell_at(0, 0);
-  // room_cell* roomfinal = get_neighbouring_room_cell(room, NORTH);
-  // assert(roomfinal);
   
   return 0;
 }

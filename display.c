@@ -15,7 +15,7 @@ void display_draw_dungeon(void)
       {
         case FLOOR: putchar('.'); break;
         case WALL: putchar('#'); break;
-        case DOOR: putchar('X'); break;
+        case DOOR: putchar('+'); break;
         default: putchar('?'); break;
       }
     }
