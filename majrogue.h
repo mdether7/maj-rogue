@@ -2,7 +2,7 @@
 #ifndef MAJROGUE_H
 #define MAJROGUE_H
 
-#include <stdint.h>
+#include <stddef.h>
 
 /* XXX Defines */
 #define DUN_SIZE 32 /* Whole dungeon is 32 x 32 = 1024 tiles */
@@ -19,6 +19,11 @@ enum tile_type {
 
 enum room_type {
   ROOM_START = 0, ROOM_CAVE, ROOM_CROSS, ROOM_RECT, ROOM_SQUARE, ROOM_TOTAL
+};
+
+enum game_cmd {
+  MOVE_NORTH = 0, MOVE_NE, MOVE_EAST, MOVE_SE,
+  MOVE_SOUTH, MOVE_SW, MOVE_WEST, MOVE_NW
 };
 
 /* XXX Structs */
@@ -42,7 +47,14 @@ extern enum tile_type maptiles[DUN_SIZE][DUN_SIZE];
 extern int map_init(void);
 
 /* XXX display.c */
-extern void display_draw_dungeon(void);
+extern int display_map_update;
+
+extern int display_init(void);
+extern void display_shutdown(void);
+extern void ncurses_display_draw_world(void);
+
+extern void input_wait(void);
+extern void input_get_string(char* buffer, size_t length);
 
 /**
  * 

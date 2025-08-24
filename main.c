@@ -3,9 +3,12 @@
 #include <sys/stat.h>
 #include <time.h>
 
+#include <stdio.h>
+
 #include "majrogue.h"
 
 char running_state[256];
+
 static void rnum_init(void)
 {
 	time_t t = time(NULL);
@@ -20,11 +23,21 @@ static void rnum_init(void)
 
 int main(void)
 {
+	char buffer[10];
+	size_t length = sizeof(buffer);
   rnum_init();
-	for (int i = 0; i < 1000; i++)
-	{
-		dungeon_generate();
-		display_draw_dungeon();
-	}
+	display_init();
+
+	dungeon_generate();
+
+	ncurses_display_draw_world();
+
+	input_wait();
+
+	input_get_string(buffer, length);
+
+	display_shutdown();
+
+	printf("%s\n", buffer);
   return 0;
 }

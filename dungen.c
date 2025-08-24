@@ -33,20 +33,14 @@ static void reset_room_cells(void);
 static void fill_map_tiles(enum tile_type type);
 static inline void draw_line(int start, int end, int fixed, bool axis_x);
 static void connect_rooms(const room_cell* room_first, const room_cell* room_second);
-static void place_doors(room_cell* room); /* modifies has_doors member */
+static void place_doors(room_cell* room); /* modifies placed_doors member */
 static void get_random_room_center(int room_x, int room_y,
                                    int* target_x, int* target_y);
 static int comp_qsort(const void* x, const void* y);
-
-/* new aditions here, tests mainly! */
-
-/**
- * Return room cell neighboring to the given room and specified direction
- * if room_cell non-existant (out of bounds) return NULL.
- */
 static inline room_cell* get_cell_at(int x_pos, int y_pos);
 static room_cell* get_neighbouring_room_cell(const room_cell* room,
                                              enum direction dir);
+
 
 static inline room_cell* get_cell_at(int x_pos, int y_pos)
 {
