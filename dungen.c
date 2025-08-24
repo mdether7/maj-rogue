@@ -10,11 +10,16 @@
 
 #include "majrogue.h"
 
+struct placed_doors {
+  bool door_n, door_e, door_s, door_w;
+};
+
 typedef struct { /* should be internal to dungen.c */
   int x, y;
   int cx, cy;
   int order;
   enum room_type type;
+  struct placed_doors doors;
   bool used;
 } room_cell;
 
@@ -28,7 +33,7 @@ static void reset_room_cells(void);
 static void fill_map_tiles(enum tile_type type);
 static inline void draw_line(int start, int end, int fixed, bool axis_x);
 static void connect_rooms(const room_cell* room_first, const room_cell* room_second);
-static void place_doors(const room_cell* room);
+static void place_doors(room_cell* room); /* modifies has_doors member */
 static void get_random_room_center(int room_x, int room_y,
                                    int* target_x, int* target_y);
 static int comp_qsort(const void* x, const void* y);
@@ -235,29 +240,53 @@ static void connect_rooms(const room_cell* room_first, const room_cell* room_sec
 /* ENDIF STUDY */
 
 
-static void place_doors(const room_cell* room)
+static void place_doors(room_cell* room)
 {
   /**
    * Iterate over each room side [N,W,S,E] and place 
    * doors based on certain conditions
+   * Also it avoid duplicate doors.
    */
 
   for (int nwse = 0; nwse < DUN_ROOM_SIZE; nwse++)
-  {                               /* && (START_ROOM || PERCENT_CHANCE) ??? Maybe */    
-    if (!maptiles[room->x][room->y+nwse]) { /* north*/
-      room_cell* n_room = get_neighbouring_room_cell(room, NORTH);
-      (void)n_room; /* TODO(mdether7): make so that doors are not spawned directly */
-      maptiles[room->x][room->y+nwse] = DOOR; /* besides each other. */
+  {    
+
+    if (!maptiles[room->x][room->y+nwse]) { /* north wall */
+      room_cell* north_room = get_neighbouring_room_cell(room, NORTH);
+      if (north_room && !north_room->doors.door_s)
+      { /* if north room generated and south wall doesnt yet have walls */
+        maptiles[room->x][room->y+nwse] = DOOR;
+        room->doors.door_n = true;
+      }
+    } 
+
+    if (!maptiles[room->x+DUN_ROOM_SIZE - 1][room->y+nwse]) { /* south wall */
+      room_cell* south_room = get_neighbouring_room_cell(room, SOUTH);
+      if (south_room && !south_room->doors.door_n) 
+      {
+        maptiles[room->x+DUN_ROOM_SIZE - 1][room->y+nwse] = DOOR;
+        room->doors.door_s = true;
+      }
     }
-    if (!maptiles[room->x+DUN_ROOM_SIZE - 1][room->y+nwse]) { /* south */
-      maptiles[room->x+DUN_ROOM_SIZE - 1][room->y+nwse] = DOOR;
+
+    if (!maptiles[room->x+nwse][room->y]) { /* west wall */
+      room_cell* west_room = get_neighbouring_room_cell(room, WEST);
+      if (west_room && !west_room->doors.door_e)
+      {
+        maptiles[room->x+nwse][room->y] = DOOR;
+        room->doors.door_w = true;
+      }
     }
-    if (!maptiles[room->x+nwse][room->y]) { /* west */
-      maptiles[room->x+nwse][room->y] = DOOR;
+
+    if (!maptiles[room->x+nwse][room->y+DUN_ROOM_SIZE - 1]) { /* east wall */
+      room_cell* east_room = get_neighbouring_room_cell(room, EAST);
+      if (east_room && !east_room->doors.door_w)
+      {
+        maptiles[room->x+nwse][room->y+DUN_ROOM_SIZE - 1] = DOOR;
+        room->doors.door_e = true;
+      } 
     }
-    if (!maptiles[room->x+nwse][room->y+DUN_ROOM_SIZE - 1]) {
-      maptiles[room->x+nwse][room->y+DUN_ROOM_SIZE - 1] = DOOR; /* east */
-    }
+
   }
 
 }
@@ -299,7 +328,7 @@ static void reset_room_cells(void)
   {
     for (int j = 0; j < DUN_SIZE; )
     {
-      room_cells[count++] = (room_cell){i, j, 0, 0, INT_MAX, 0, false};
+      room_cells[count++] = (room_cell){i, j, 0, 0, INT_MAX, 0, {false, false, false, false}, false};
       j+= DUN_ROOM_SIZE;
     }
     i+=DUN_ROOM_SIZE;
