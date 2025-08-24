@@ -68,8 +68,11 @@ void input_get_string(char* buffer, size_t length)
 {
   echo();
   mvwgetnstr(world_window,0, 0, buffer, length);
+  buffer[length - 1] = '\0';
   noecho();
 }
+
+
 
 void input_wait(void)
 {

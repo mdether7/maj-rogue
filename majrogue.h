@@ -40,6 +40,7 @@ struct room {
 };
 
 /* XXX player.c */
+extern struct player you;
 extern void player_init(void);
 
 /* XXX map.c */

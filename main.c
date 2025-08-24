@@ -23,8 +23,6 @@ static void rnum_init(void)
 
 int main(void)
 {
-	char buffer[10];
-	size_t length = sizeof(buffer);
   rnum_init();
 	display_init();
 
@@ -34,10 +32,11 @@ int main(void)
 
 	input_wait();
 
-	input_get_string(buffer, length);
+	player_init();
 
 	display_shutdown();
 
-	printf("%s\n", buffer);
+	printf("%s", you.name);
+
   return 0;
 }
