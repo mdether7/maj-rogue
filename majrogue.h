@@ -68,6 +68,7 @@ extern int dungeon_generate(void);
 
 /* XXX dice.c */
 extern int dice(int sides); /* dice range 1 to SIDES */
+extern int dice_chance(double p); /* Returns 1 if random event occurs with probability p (0.0 to 1.0) */
 extern int dice_zero(int sides); /* dice range 0 to SIDES-1 */
 extern int dice_multiple(int count, int sides);
 extern int dice_zero_multiple(int count, int sides); /* [[MAYBE_UNUSED]] */ 

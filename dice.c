@@ -1,8 +1,9 @@
 /* dice.c */
 
-#include<stdlib.h>
+#include <stdlib.h>
+#include <assert.h>
 
-#include"majrogue.h"
+#include "majrogue.h"
 
 int dice_multiple(int count, int sides)
 {
@@ -11,6 +12,12 @@ int dice_multiple(int count, int sides)
     total += dice(sides);
   }
   return total;
+}
+
+int dice_chance(double p) 
+{
+  assert(p >= 0.0 && p <= 1.0);
+  return ((double)rand() / (RAND_MAX + 1.0)) < p;
 }
 
 int dice_zero_multiple(int count, int sides)
