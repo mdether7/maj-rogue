@@ -17,9 +17,10 @@ static int get_terrain_char(enum tile_type tile);
 int display_init(void)
 {
   initscr();
+  curs_set(0);
   noecho();
   cbreak();
-  world_window = newwin(DUN_SIZE, DUN_SIZE, 0, 0);
+  world_window = newwin(9, 17, 0, 0); /* 9 rows, 17 columns */
   world_panel = new_panel(world_window);
   wclear(world_window);
   display_map_update = TRUE;
@@ -37,7 +38,7 @@ void display_shutdown(void)
   endwin();
 }
 
-void ncurses_display_draw_world(void)
+void display_draw_world(void)
 {
   wclear(world_window);
 
@@ -67,12 +68,19 @@ static int get_terrain_char(enum tile_type tile)
 void input_get_string(char* buffer, size_t length)
 {
   echo();
+  curs_set(1);
+
+  buffer[0] = '\0';
   mvwgetnstr(world_window,0, 0, buffer, length);
-  buffer[length - 1] = '\0';
+
+  curs_set(0);
   noecho();
 }
 
-
+enum game_cmd get_command(void)
+{
+  
+}
 
 void input_wait(void)
 {

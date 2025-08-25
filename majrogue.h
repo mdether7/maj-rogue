@@ -23,7 +23,11 @@ enum room_type {
 
 enum game_cmd {
   MOVE_NORTH = 0, MOVE_NE, MOVE_EAST, MOVE_SE,
-  MOVE_SOUTH, MOVE_SW, MOVE_WEST, MOVE_NW
+  MOVE_SOUTH, MOVE_SW, MOVE_WEST, MOVE_NW, GO_MENU,
+};
+
+enum game_state {
+  MENU = 0, GAME
 };
 
 /* XXX Structs */
@@ -40,7 +44,7 @@ struct room {
 };
 
 /* XXX player.c */
-extern struct player you;
+extern struct player you; /* global player variable */
 extern void player_init(void);
 
 /* XXX map.c */
@@ -52,7 +56,7 @@ extern int display_map_update;
 
 extern int display_init(void);
 extern void display_shutdown(void);
-extern void ncurses_display_draw_world(void);
+extern void display_draw_world(void);
 
 extern void input_wait(void);
 extern void input_get_string(char* buffer, size_t length);
