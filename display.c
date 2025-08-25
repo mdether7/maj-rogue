@@ -10,7 +10,11 @@
 static WINDOW* world_window;
 static PANEL* world_panel;
 
+static WINDOW* menu_window;
+static PANEL* menu_panel;
+
 int display_map_update;
+int display_menu_update;
 
 static int get_terrain_char(enum tile_type tile);
 
@@ -20,10 +24,14 @@ int display_init(void)
   curs_set(0);
   noecho();
   cbreak();
+  menu_window = newwin(20, 20, 0, 0);
   world_window = newwin(9, 17, 0, 0); /* 9 rows, 17 columns */
+  menu_panel = new_panel(menu_window);
   world_panel = new_panel(world_window);
+  wclear(menu_window);
   wclear(world_window);
   display_map_update = TRUE;
+  display_menu_update = TRUE;
   update_panels();
   doupdate();
   return 0;
@@ -31,6 +39,10 @@ int display_init(void)
 
 void display_shutdown(void)
 {
+  del_panel(menu_panel);
+  menu_panel = NULL;
+  delwin(menu_window);
+  menu_window = NULL;
   del_panel(world_panel);
   world_panel = NULL;
   delwin(world_window);
@@ -52,6 +64,11 @@ void display_draw_world(void)
 
   update_panels();
   doupdate();
+}
+
+void display_draw_menu(void)
+{
+  
 }
 
 static int get_terrain_char(enum tile_type tile)
@@ -77,9 +94,14 @@ void input_get_string(char* buffer, size_t length)
   noecho();
 }
 
-enum game_cmd get_command(void)
+enum game_cmd get_game_cmd(void)
 {
-  
+  return GAME_MOVE_EAST;
+}
+
+enum menu_cmd get_menu_cmd(void)
+{
+  return MENU_GO_UP;
 }
 
 void input_wait(void)

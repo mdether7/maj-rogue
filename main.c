@@ -11,7 +11,9 @@
 char running_state[256];
 
 static void rnum_init(void);
-static void new_game(void);
+static void menu(enum game_state* state);
+static void game(enum game_state* state);
+// static void new_game(void);
 // static int save_game(void);
 
 static void rnum_init(void)
@@ -48,24 +50,47 @@ static void rnum_init(void)
 
 /* ANYTHING TO THE POWER OF 0 EQUALS 1 */
 
-static void new_game(void)
+// static void new_game(void)
+// {
+// 	player_init();
+// }
+
+static void menu(enum game_state* state)
 {
-	player_init();
+	display_draw_menu();
+	enum menu_cmd cmd = get_menu_cmd();
+	switch (cmd)
+	{
+		case MENU_SELECT: break;
+		case MENU_GO_UP: break;
+		case MENU_GO_DOWN: break;
+		case MENU_QUIT: break;
+		case MENU_RETURN_GAME: break;
+		default: /* something unexpected happened */
+			display_shutdown();
+			abort();
+		break;
+	}
+}
+
+static void game(enum game_state* state)
+{
+
 }
 
 int main(void)
 {
 	display_init();
 
-	enum game_state state = MENU;
-	int quit = 0;
-	while (!quit)
+	enum game_state state = STATE_MENU;
+	while (state != STATE_OVER)
 	{
 		switch (state)
 		{
-			case MENU: break;
-			case GAME: break;
-			default: abort(); /* shoudl not ever happen*/
+			case STATE_MENU: menu(&state); break;
+			case STATE_GAME: game(&state); break;
+			case STATE_OVER: break;
+			default: abort(); /* something wierd happend */
 		}
 	}
 

@@ -22,12 +22,16 @@ enum room_type {
 };
 
 enum game_cmd {
-  MOVE_NORTH = 0, MOVE_NE, MOVE_EAST, MOVE_SE,
-  MOVE_SOUTH, MOVE_SW, MOVE_WEST, MOVE_NW, GO_MENU,
+  GAME_MOVE_NORTH = 0, GAME_MOVE_NE, GAME_MOVE_EAST, GAME_MOVE_SE,
+  GAME_MOVE_SOUTH, GAME_MOVE_SW, GAME_MOVE_WEST, GAME_MOVE_NW, GAME_GO_MENU,
+};
+
+enum menu_cmd {
+  MENU_SELECT = 0, MENU_GO_UP, MENU_GO_DOWN, MENU_QUIT, MENU_RETURN_GAME,
 };
 
 enum game_state {
-  MENU = 0, GAME
+  STATE_MENU = 0, STATE_GAME, STATE_OVER
 };
 
 /* XXX Structs */
@@ -53,13 +57,17 @@ extern int map_init(void);
 
 /* XXX display.c */
 extern int display_map_update;
+extern int display_menu_update;
 
 extern int display_init(void);
 extern void display_shutdown(void);
 extern void display_draw_world(void);
+extern void display_draw_menu(void);
 
 extern void input_wait(void);
 extern void input_get_string(char* buffer, size_t length);
+enum game_cmd get_game_cmd(void);
+enum menu_cmd get_menu_cmd(void);
 
 /**
  * 
